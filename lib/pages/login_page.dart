@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:touristapp/models/user.dart';
+import 'package:touristapp/pages/poidetails_page.dart';
 import 'package:touristapp/pages/home_page.dart';
 import 'package:touristapp/pages/register_page.dart';
+import 'package:touristapp/repository/firebase_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -18,9 +20,11 @@ class _LoginPageState extends State<LoginPage> {
 
   User userLoad = User.Empty();
 
+  final FirebaseApi _firebaseApi = FirebaseApi();
+
   @override
   void initState() {
-    _getUser();
+    //_getUser();
     super.initState();
   }
 
@@ -40,12 +44,32 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _validateUser () {
-    if (_email.text == userLoad.email && _password.text == userLoad.password){
-      _showMsg("WELCOME");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  const HomePage()));
+  void _validateUser() async {
+    if (_email.text.isEmpty || _password.text.isEmpty ){
+      _showMsg("Please, type the email and password");
     } else {
-      _showMsg("Wrong Email or Password");
+      var result2 = await _firebaseApi.logInUser(_email.text, _password.text);
+      String msg = "";
+      if (result2 == "invalid-email"){
+        msg = "Misspelled Email";
+        _showMsg(msg);
+      } else
+      if (result2 == "user-not-found"){
+        msg = "Wrong Email";
+        _showMsg(msg);
+      } else
+      if(result2 == "wrong-password"){
+        msg = "Wrong Password";
+        _showMsg(msg);
+      } else
+      if(result2 == "network-request-failed"){
+        msg = "Check your internet connection";
+        _showMsg(msg);
+      } else {
+        msg = "WELCOME";
+        _showMsg(msg);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      }
     }
   }
 

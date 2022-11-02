@@ -1,12 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:touristapp/pages/home_page.dart';
-import 'package:touristapp/pages/login_page.dart';
-import 'package:touristapp/pages/register_page.dart';
+import 'package:touristapp/firebase_options.dart';
 import 'package:touristapp/pages/splash_page.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
 }
 
 class MyApp extends StatelessWidget {

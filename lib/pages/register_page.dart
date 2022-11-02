@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:touristapp/models/user.dart';
 import 'package:touristapp/pages/login_page.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:touristapp/repository/firebase_api.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key : key);
@@ -16,6 +15,8 @@ class RegisterPage extends StatefulWidget {
 enum Genre {male, female, other}
 
 class _RegisterPageState extends State<RegisterPage> {
+
+  final FirebaseApi _firebaseApi = FirebaseApi();
   final _name = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -63,9 +64,38 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void saveUser(User user) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("user", jsonEncode(user));
+  void _saveUser(User user) async {
+    var result = await _firebaseApi.createUser(user);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
+  void _registerUser(User user) async {
+    //SharedPreferences prefs = await SharedPreferences.getInstance(); COMENTADO MANUAL
+    //prefs.setString("user", jsonEncode(user)); COMENTADO MANUAL
+    var result1 = await _firebaseApi.registerUser(user.email, user.password);
+    String msg = "";
+    if (result1 == "invalid-email"){
+      msg = "Misspelled Email";
+      _showMsg(msg);
+    } else
+    if(result1 == "weak-password"){
+      msg = "Password with no 6 or more characters";
+      _showMsg(msg);
+    } else
+    if(result1 == "email-already-in-use"){
+      msg = "Email already in use";
+      _showMsg(msg);
+    } else
+    if(result1 == "network-request-failed"){
+      msg = "Check your internet connection";
+      _showMsg(msg);
+    } else {
+      msg = "Successful Registration";
+      user.uid = result1;
+      _saveUser(user);
+      _showMsg(msg);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+    }
   }
 
   void _onRegisterButtonClicked(){
@@ -81,10 +111,10 @@ class _RegisterPageState extends State<RegisterPage> {
           genre = "other";
         }
 
-        var user = User(_name.text, _email.text, _password.text, genre, _date);
-        saveUser(user);
-        _showMsg("Successful Registration");
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+        var user = User("", _name.text, _email.text, _password.text, genre, _date);
+        _registerUser(user);
+        //_showMsg("Successful Registration");
+        //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
 
       } else {
         _showMsg("Passwords must be same");

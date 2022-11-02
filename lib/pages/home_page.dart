@@ -1,4 +1,10 @@
+import 'package:touristapp/pages/poidetails_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:touristapp/pages/login_page.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:touristapp/models/site.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -7,129 +13,86 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+enum Menu{logOut}
+double _rating = 3.0;
+
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text("My Sites"),
-          backgroundColor: Colors.purpleAccent
+        title: const Text("Tourist Sites"),
+        backgroundColor: Colors.purpleAccent,
+        actions: [
+          PopupMenuButton(
+            onSelected: (Menu item){
+              setState(() {
+                if (item == Menu.logOut){
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                }
+              });
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
+              const PopupMenuItem(
+                value: Menu.logOut,
+                child: Text('Sign out'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Center (
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:  <Widget> [
-                const Text(
-                  "Morgan's cave",
-                  style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.redAccent
-                  ),
-                ),
-                const SizedBox(height: 20.0,),
-                const Image(image: AssetImage('assets/images/morgan_cave2.jpg'),width: 310,),
-                const SizedBox(height: 16.0,),
-                const SizedBox(height: 16.0,),
-                Row(
-                  children:  const <Widget> [
-                    Text(
-                      'TOWN: ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.orange
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+          child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection("sites").snapshots(),
+              builder: (context, snapshot){
+                if (snapshot.hasError) {return const Text('Something went wrong');}
+                if (!snapshot.hasData) return const Text('Loading');
+                return ListView.builder(
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (context, index) {
+                    QueryDocumentSnapshot site = snapshot.data!.docs[index];
+                    return Card(
+                      child: ListTile(
+                        leading: Image(image: AssetImage(site['photo']), width: 50,),
+                        title: Text(site['nameSite']),
+                        subtitle:
+                        Column(
+                            children: <Widget>[
+                              Text(site['generalDescription']),
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: RatingBar.builder(
+                                    initialRating: site['rating'].toDouble(),
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemSize: 16.0,
+                                    itemCount: 5,
+                                    itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                    itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.purpleAccent,
+                                    ),
+                                    onRatingUpdate: (rating){
+                                      _rating = rating;
+                                    }
+                                ),
+                              )
+                            ]
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_rounded),
+                        enabled: true,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PoiDetailsPage(site)));
+                        },
                       ),
-                    ),
-                    Text(
-                      'San Andres Island.',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.purple
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0,),
-                Row(
-                  children:  const <Widget> [
-                    Text(
-                      'DEPARMENT: ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.orange
-                      ),
-                    ),
-                    Text(
-                      'San Andres Archipelago.',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.purple
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0,),
-                Row(
-                  children:  const <Widget> [
-                    Text(
-                      'DESCRIPTION: ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.orange
-                      ),
-                    ),
-                    Text(
-                      'Esto es texto apoyo',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white
-                      ),
-                    ),
-                  ],
-                ),
-                const Text(
-                  "According to the legend it's the place where pirates"
-                      " hidden the treasures. Natives say it is made of some labyrinths"
-                      " that end in a unique and incomparable beach.",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.purple
-                  ),
-                ),
-                const SizedBox(height: 16.0,),
-                Row(
-                  children:  const <Widget> [
-                    Text(
-                      'MORE INFORMATION: ',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.orange
-                      ),
-                    ),
-                    Text(
-                      'texto apoyo',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white
-                      ),
-                    ),
-                  ],
-                ),
-                const Text(
-                  "The tour begins with the Coconut Museum; after"
-                      " you should visit the Pirate Museum; later move onto"
-                      " the native art gallery and finally the cave.",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.purple
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                    );
+                  },
+                );
+              }
+          )
       ),
     );
   }
