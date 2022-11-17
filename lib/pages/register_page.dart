@@ -12,6 +12,7 @@ class RegisterPage extends StatefulWidget {
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
+var obscureText = true;
 enum Genre {male, female, other}
 
 class _RegisterPageState extends State<RegisterPage> {
@@ -138,8 +139,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: _name,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Name'),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                        borderRadius: BorderRadius.circular(20.0),
+
+                      ),
+                      labelText: 'Name',
+                      labelStyle: const TextStyle(
+                          color: Colors.black54
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.person_outline,
+                        size: 20,
+                        color: Colors.purple,
+                      ),
+                    ),
                     keyboardType: TextInputType.text,
                   ),
                   const SizedBox(
@@ -147,8 +166,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: _email,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Email'),
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      focusedBorder:  OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                        borderRadius: BorderRadius.circular(20.0),
+
+                      ),
+                      labelText: 'Email',
+                      labelStyle: const TextStyle(
+                          color: Colors.black54
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.email_outlined,
+                        size: 20,
+                        color: Colors.purple,
+                      ),
+                    ),
+
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(
@@ -156,8 +194,45 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: _password,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Password'),
+                    obscureText: obscureText,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        focusedBorder:  OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                          borderRadius: BorderRadius.circular(20.0),
+
+                        ),
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(
+                            color: Colors.black54
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.lock_clock_outlined,
+                          size: 20,
+                          color: Colors.purple,
+                        ),
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                            child: obscureText
+                                ? const Icon(
+                              Icons.visibility_off,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                                : const Icon(
+                              Icons.visibility,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                        )
+                    ),
                     keyboardType: TextInputType.text,
                   ),
                   const SizedBox(
@@ -165,8 +240,45 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   TextFormField(
                     controller: _repPassword,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Repeat Password'),
+                    obscureText: obscureText,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        focusedBorder:  OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                          borderRadius: BorderRadius.circular(20.0),
+
+                        ),
+                        labelText: 'Repeat Password',
+                        labelStyle: const TextStyle(
+                            color: Colors.black54
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.lock_clock_outlined,
+                          size: 20,
+                          color: Colors.purple,
+                        ),
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                            child: obscureText
+                                ? const Icon(
+                              Icons.visibility_off,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                                : const Icon(
+                              Icons.visibility,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                        )
+                    ),
                     keyboardType: TextInputType.text,
                   ),
                   const SizedBox(
@@ -184,6 +296,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           leading: Radio<Genre>(
                               value: Genre.male,
                               groupValue: _genre,
+                              fillColor: MaterialStateColor.resolveWith((states) => Colors.purple),
                               onChanged: (Genre? value) {
                                 setState(() {
                                   _genre = value;
@@ -197,6 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           leading: Radio<Genre>(
                               value: Genre.female,
                               groupValue: _genre,
+                              fillColor: MaterialStateColor.resolveWith((states) => Colors.purple),
                               onChanged: (Genre? value) {
                                 setState(() {
                                   _genre = value;
@@ -210,6 +324,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           leading: Radio<Genre>(
                               value: Genre.other,
                               groupValue: _genre,
+                              fillColor: MaterialStateColor.resolveWith((states) => Colors.purple),
                               onChanged: (Genre? value) {
                                 setState(() {
                                   _genre = value;
@@ -225,7 +340,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ElevatedButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
-                      // backgroundColor: Colors.purpleAccent
+                        backgroundColor: Colors.purple.shade400
                     ),
                     onPressed: (){
                       _showSelectDate();
@@ -238,7 +353,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ElevatedButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
-                      //backgroundColor: Colors.purpleAccent
+                      backgroundColor: Colors.purpleAccent
                     ),
                     onPressed: (){
                       _onRegisterButtonClicked();

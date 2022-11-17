@@ -1,74 +1,24 @@
-import 'package:touristapp/boxes.dart';
-import 'package:touristapp/models/local_site.dart';
 import 'package:touristapp/pages/favorites_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:touristapp/pages/Home_page.dart';
-import 'package:touristapp/pages/location_page.dart';
+import 'package:touristapp/pages/location_favorites_page.dart';
 import 'package:touristapp/pages/login_page.dart';
+import 'package:touristapp/models/local_site.dart';
 
-class PoiDetailsPage extends StatefulWidget {
-  late QueryDocumentSnapshot capturingDatas;
+class PoiDetailsFavoritesPage extends StatefulWidget {
+  LocalSite localSite;
 
-  PoiDetailsPage(this.capturingDatas,{super.key});
+  PoiDetailsFavoritesPage(this.localSite,{super.key});
 
 
   @override
-  State<PoiDetailsPage> createState() => _PoiDetailsPageState();
+  State<PoiDetailsFavoritesPage> createState() => _PoiDetailsFavoritesPageState();
 }
 
 enum Menu{logOut}
 
-class _PoiDetailsPageState extends State<PoiDetailsPage> {
-
-  var isFavorite = false;
-
-  @override
-  void initState() {
-    _getLocalSite();
-    super.initState();
-  }
-
-  void _getLocalSite(){
-    final box = Boxes.getFavoritesBox();
-    box.values.forEach((element) {
-      if (element.id == widget.capturingDatas.id){
-        isFavorite = true;
-      }
-    });
-  }
-
-  void _onFavoritesButtonClicked() async{
-
-    var localSite = LocalSite()
-      ..id = widget.capturingDatas['id']
-      ..nameSite = widget.capturingDatas['nameSite']
-      ..generalDescription = widget.capturingDatas['generalDescription']
-      ..photo = widget.capturingDatas['photo']
-      ..rating = widget.capturingDatas['rating'].toDouble()
-      ..town = widget.capturingDatas['town']
-      ..department = widget.capturingDatas['department']
-      ..detailedDescription = widget.capturingDatas['detailedDescription']
-      ..moreInformation = widget.capturingDatas['moreInformation']
-      ..latitude = widget.capturingDatas['latitude']
-      ..longitude = widget.capturingDatas['longitude'];
-
-    final box = Boxes.getFavoritesBox();
-    //box.add(localSite);
-
-    if (isFavorite){
-      box.delete(localSite.id);
-    } else{
-      box.put(localSite.id, localSite);
-    }
-
-    setState(() {
-      isFavorite = !isFavorite;
-    });
-
-  }
-
+class _PoiDetailsFavoritesPageState extends State<PoiDetailsFavoritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,28 +64,14 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:  <Widget> [
                     Text(
-                      widget.capturingDatas['nameSite'],
+                      widget.localSite.nameSite ?? "No Name",
                       style: const TextStyle(
                           fontSize: 40,
                           color: Colors.redAccent
                       ),
                     ),
                     const SizedBox(height: 20.0,),
-                    Row(
-                        children:[
-                          Expanded(
-                              child: IconButton(
-                                alignment: Alignment.topRight,
-                                icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-                                color: Colors.red,
-                                onPressed: ((){
-                                  _onFavoritesButtonClicked();
-                                }),
-                              )
-                          ),
-                        ]
-                    ),
-                    Image(image: AssetImage(widget.capturingDatas['photo']),width: 250,),
+                    Image(image: AssetImage(widget.localSite.photo ?? "assets/images/logo.png"),width: 250,),
                     Row(
                         children:[
                           Expanded(
@@ -144,7 +80,7 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                                 icon: const Icon(Icons.location_on_outlined),
                                 color: Colors.red,
                                 onPressed: ((){
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  LocationPage(widget.capturingDatas)));
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LocationFavoritesPage(widget.localSite)));
                                 }),
                               )
                           ),
@@ -161,7 +97,7 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                           ),
                         ),
                         Text(
-                          widget.capturingDatas['town'],
+                          widget.localSite.town ?? "No town",
                           style: const TextStyle(
                               fontSize: 20,
                               color: Colors.purple
@@ -180,7 +116,7 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                           ),
                         ),
                         Text(
-                          widget.capturingDatas['department'],
+                          widget.localSite.department ?? "No Department",
                           style: const TextStyle(
                               fontSize: 20,
                               color: Colors.purple
@@ -208,7 +144,7 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                       ],
                     ),
                     Text(
-                      widget.capturingDatas['detailedDescription'],
+                      widget.localSite.detailedDescription ?? "No Description",
                       textAlign: TextAlign.justify,
                       style: const TextStyle(
                           fontSize: 20,
@@ -235,7 +171,7 @@ class _PoiDetailsPageState extends State<PoiDetailsPage> {
                       ],
                     ),
                     Text(
-                      widget.capturingDatas['moreInformation'],
+                      widget.localSite.moreInformation ?? "No information",
                       textAlign: TextAlign.justify,
                       style: const TextStyle(
                           fontSize: 20,

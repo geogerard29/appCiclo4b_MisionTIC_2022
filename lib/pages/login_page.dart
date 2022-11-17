@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:touristapp/models/user.dart';
-import 'package:touristapp/pages/poidetails_page.dart';
 import 'package:touristapp/pages/home_page.dart';
 import 'package:touristapp/pages/register_page.dart';
 import 'package:touristapp/repository/firebase_api.dart';
@@ -15,6 +14,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  var obscureText = true;
+
   final _email = TextEditingController();
   final _password = TextEditingController();
 
@@ -87,18 +89,72 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25.0,),
                 TextFormField(
                     controller: _email,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Email'
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        focusedBorder:  OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                          borderRadius: BorderRadius.circular(20.0),
+
+                        ),
+                        labelText: 'Email',
+                      labelStyle: const TextStyle(
+                        color: Colors.black54
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.email_outlined,
+                        size: 20,
+                        color: Colors.purple,
+                      ),
                     ),
                     keyboardType: TextInputType.emailAddress
                 ),
                 const SizedBox(
                   height: 16.0,
                 ),
+
                 TextFormField(
                     controller: _password,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Password'
+                    obscureText: obscureText,
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple),
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        focusedBorder:  OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.purple, width: 2.5),
+                          borderRadius: BorderRadius.circular(20.0),
+
+                        ),
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(
+                            color: Colors.black54
+                        ),
+                        prefixIcon: const Icon(
+                          Icons.lock_clock_outlined,
+                          size: 20,
+                          color: Colors.purple,
+                        ),
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                obscureText = !obscureText;
+                              });
+                            },
+                            child: obscureText
+                                ? const Icon(
+                              Icons.visibility_off,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                                : const Icon(
+                              Icons.visibility,
+                              size: 20,
+                              color: Colors.purple,
+                            )
+                        )
                     ),
                     keyboardType: TextInputType.emailAddress
                 ),
@@ -111,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 16),
-                      //backgroundColor: Colors.purpleAccent COMMMENT
+                      backgroundColor: Colors.purple.shade400
                     ),
                     child: const Text('Log in')
                 ),

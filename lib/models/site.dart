@@ -8,11 +8,13 @@ class Site {
   var _department;
   var _detailedDescription;
   var _moreInformation;
+  var _latitude;
+  var _longitude;
 
 
   Site(this._uid, this._photo, this._nameSite, this._generalDescription,
       this._rating, this._town, this._department, this._detailedDescription,
-      this._moreInformation);
+      this._moreInformation, this._latitude, this._longitude);
 
   Site.fromJson(Map<String, dynamic> json)
       :
@@ -24,7 +26,9 @@ class Site {
         _town = json['town'],
         _department = json['department'],
         _detailedDescription = json['detailedDescription'],
-        _moreInformation = json['moreInformation'];
+        _moreInformation = json['moreInformation'],
+        _latitude = json['latitude'],
+        _longitude = json['longitude'];
 
   Map<String, dynamic> toJson() =>
       {
@@ -37,6 +41,8 @@ class Site {
         'department': _department,
         'detailedDescription': _detailedDescription,
         'moreInformation': _moreInformation,
+        'latitude': _latitude,
+        'longitude': _longitude,
 
       };
 
@@ -94,4 +100,15 @@ class Site {
     _uid = value;
   }
 
+  get longitude => _longitude;
+
+  set longitude(value) {
+    _longitude = value;
+  }
+
+  get latitude => _latitude;
+
+  set latitude(value) {
+    _latitude = value;
+  }
 }

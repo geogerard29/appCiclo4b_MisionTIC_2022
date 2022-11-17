@@ -1,10 +1,10 @@
+import 'package:touristapp/pages/favorites_page.dart';
 import 'package:touristapp/pages/poidetails_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:touristapp/pages/login_page.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:touristapp/models/site.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +24,18 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Tourist Sites"),
         backgroundColor: Colors.purpleAccent,
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const HomePage()));
+            },
+            icon: const Icon(Icons.home),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const FavoritesPage()));
+            },
+            icon: const Icon(Icons.favorite),
+          ),
           PopupMenuButton(
             onSelected: (Menu item){
               setState(() {
