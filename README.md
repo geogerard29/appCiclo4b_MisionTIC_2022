@@ -2,18 +2,21 @@
 
 ### 1. DESCRIPCION 
 
-Proyecto de desarrollo móvil del ciclo 4b, realizado por el equipo GADJET TEAM, Universidad 
+Proyecto de desarrollo móvil del ciclo 4b, realizado con flutter por el equipo GADJET TEAM, Universidad 
 de Antioquia, Misión Tic 2022, correspondiente a una app que muestra una lista de sitios turísticos
 de la ciudad de San Andrés e información detallada cuando se selecciona un sitio en particular.
+
 Para acceder el usuario deberá primero registrarse y luego realizar el proceso de login. La app 
 cuenta con la opción de visualizarlos en Google maps y de marcarlos como favoritos.
 
-Para ver la funcionalidad de la app se puede ver el video el cual se encuentra en la rama main
-de este repositorio, o en el siguiente link:
+### 2. VIDEO QUE EVIDENCIA LA FUNCIONALIDAD
+
+Para evidenciar la funcionalidad de la app se puede ver el video el cual se encuentra en la rama 
+main de este repositorio, o en el siguiente link:
 
 https://drive.google.com/file/d/1OKcmbxJXc1-dlhoKk_bRW_OqP5so1Jo5/view?usp=share_link
 
-### 2. FRAMEWORKS, LENGUAJES Y HERRAMIENTAS DE DESARROLLO
+### 3. FRAMEWORKS, LENGUAJES Y HERRAMIENTAS UTILIZADAS
 
  * Android Studio
  * Flutter
@@ -23,7 +26,7 @@ https://drive.google.com/file/d/1OKcmbxJXc1-dlhoKk_bRW_OqP5so1Jo5/view?usp=share
  * Hive
  * Api Google Maps
 
-### 3. DESARROLLO DE LA APP 
+### 4. DESARROLLO DE LA APP 
 
 El proyecto touristapp se realizó empleando la metodología SCRUM en 4 Sprints. El desarrollo de cada 
 Sprint queda incorporado en las ramas de este repositorio denominados Sprint1, Sprint2, Sprint3 y 
